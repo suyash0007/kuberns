@@ -1,0 +1,38 @@
+ARG BASE_IMAGE=python:3.10-slim
+FROM ${BASE_IMAGE} as base
+
+# Define APT_PACKAGES including pkg-config
+ARG APT_PACKAGES="build-essential pkg-config libmysqlclient-dev nodejs npm"
+
+# Set the working directory
+WORKDIR /app
+
+# Copy application code first to leverage Docker cache for subsequent layers
+COPY ${ROOT_DIRECTORY} /app/
+
+# Install APT packages needed for building Python packages (like mysqlclient)
+# This MUST happen before pip install -r requirements.txt
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ${APT_PACKAGES} && \
+    rm -rf /var/lib/apt/lists/* # Clean up apt cache to reduce image size
+
+# Define pre-build, post-build, and deploy commands
+ARG PREBUILD_COMMANDS="cd backend && pip install -r requirements.txt && cd ../frontend/launchpad-deploy && npm install"
+ARG POSTBUILD_COMMANDS="python manage.py migrate && python manage.py collectstatic --no-input && cd frontend/launchpad-deploy && npm run build"
+ENV DEPLOY_CMD="python manage.py runserver 0.0.0.0:8000"
+
+
+# Pre-build commands (Python and Node.js dependencies)
+RUN if [ -n "$PREBUILD_COMMANDS" ]; then \
+    echo "Running prebuild commands: $PREBUILD_COMMANDS"; \
+    bash -c "$PREBUILD_COMMANDS"; \
+fi
+
+# Post-build commands (Django migrations, collectstatic, frontend build)
+RUN if [ -n "$POSTBUILD_COMMANDS" ]; then \
+    echo "Running postbuild commands: $POSTBUILD_COMMANDS"; \
+    bash -c "$POSTBUILD_COMMANDS"; \
+fi
+
+# Runtime command
+CMD ["/bin/sh", "-c", "$DEPLOY_CMD"]
