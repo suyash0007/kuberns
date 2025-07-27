@@ -1,0 +1,7 @@
+# Backend
+/backend/.env
+/backend/__pycache__/
+/backend/*.sqlite3
+
+/frontend/launchpad-deploy/node_modules/
+/frontend/launchpad-deploy/dist/
