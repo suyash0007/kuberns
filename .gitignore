@@ -5,3 +5,8 @@
 
 /frontend/launchpad-deploy/node_modules/
 /frontend/launchpad-deploy/dist/
+
+# Operating System and Editor files
+.DS_Store
+.env
+.vscode/
