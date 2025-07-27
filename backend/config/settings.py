@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR is now correctly pointing to the 'backend' directory.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -22,7 +23,8 @@ SECRET_KEY = 'django-insecure-a&@)_-y40mtk0@@6y4%ct$vx&xv&r8*n2i&xe=16_ms#74b^6p
 DEBUG = False # <--- SET THIS TO FALSE FOR PRODUCTION
 
 # ADD YOUR HOSTNAME HERE
-ALLOWED_HOSTS = ['*'] # Using '*' for demonstration, replace with your domain.
+# You can temporarily use '*' for quick testing, but replace it with your domain.
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -61,7 +63,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'frontend', 'launchpad-deploy', 'dist')], # <-- CORRECTED PATH
+        'DIRS': [os.path.join(BASE_DIR.parent, 'frontend', 'launchpad-deploy', 'dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,9 +123,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # Corrected STATIC FILE PATHS
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Going up to the project root (parent of 'backend') to access 'frontend'
+STATIC_ROOT = os.path.join(BASE_DIR.parent, 'static_collected')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'launchpad-deploy', 'dist', 'assets'), # <-- CORRECTED PATH
+    os.path.join(BASE_DIR.parent, 'frontend', 'launchpad-deploy', 'dist', 'assets'),
 ]
 
 # Default primary key field type
