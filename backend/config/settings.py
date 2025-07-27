@@ -19,10 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-a&@)_-y40mtk0@@6y4%ct$vx&xv&r8*n2i&xe=16_ms#74b^6p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False # <--- SET THIS TO FALSE FOR PRODUCTION
 
-ALLOWED_HOSTS = ['*']
-
+# ADD YOUR HOSTNAME HERE
+ALLOWED_HOSTS = ['*'] # Using '*' for demonstration, replace with your domain.
 
 # Application definition
 
@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',  # Moved rest_framework to a standard position
+    'rest_framework',
     'app',
 ]
 
@@ -57,14 +57,15 @@ CORS_ALLOWED_ORIGINS = [
 
 ROOT_URLCONF = 'config.urls'
 
-# Updated TEMPLATES to serve the frontend's index.html
+# Corrected TEMPLATES to serve the frontend's index.html
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'frontend', 'dist')], # <-- ADDED THIS
+        'DIRS': [os.path.join(BASE_DIR, 'frontend', 'launchpad-deploy', 'dist')], # <-- CORRECTED PATH
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -77,8 +78,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -86,14 +85,12 @@ DATABASES = {
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'PORT': os.getenv('DB_PORT', 3306),
     }
 }
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -111,8 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -123,17 +118,13 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
 
-# Added STATIC_ROOT and STATICFILES_DIRS for monorepo deployments
-STATIC_ROOT = os.path.join(BASE_DIR, 'backend', 'staticfiles')
+# Corrected STATIC FILE PATHS
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'dist'),
+    os.path.join(BASE_DIR, 'frontend', 'launchpad-deploy', 'dist', 'assets'), # <-- CORRECTED PATH
 ]
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
