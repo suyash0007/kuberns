@@ -55,7 +55,10 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
-    "https://kuberns-main-af41058.kuberns.cloud"
+    "https://kuberns-main-af41058.kuberns.cloud",
+    "http://10.0.3.177:4173",
+    "https://kuberns-frontend-main-ae8bab7.kuberns.cloud"
+    
 ]
 
 ROOT_URLCONF = 'config.urls'
